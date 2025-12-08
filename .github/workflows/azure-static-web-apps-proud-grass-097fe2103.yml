@@ -49,6 +49,7 @@ jobs:
           # Backend API URL for production
           REACT_APP_API_URL: https://cemetry360-backend.azurewebsites.net/api
           NODE_VERSION: '18'
+          CI: false
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
