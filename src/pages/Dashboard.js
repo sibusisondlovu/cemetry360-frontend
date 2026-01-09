@@ -145,61 +145,13 @@ export default function Dashboard() {
       {/* KwaZulu-Natal Map */}
       <div className="mt-8 relative">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="relative" style={{ minHeight: '400px' }}>
-            {mapImageLoading && !mapImageError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-20">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                  <p className="text-sm text-gray-600">Loading map...</p>
-                </div>
-              </div>
-            )}
-            <>
-              <div 
-                className="absolute inset-0 z-10 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 15%, rgba(255,255,255,0.2) 85%, rgba(255,255,255,0.5) 100%)',
-                }}
-              />
-              {mapImageError ? (
-                <img
-                  src="/kzn-map-placeholder.svg"
-                  alt="KwaZulu-Natal Map Placeholder"
-                  className="w-full h-auto"
-                  style={{ opacity: 0.5 }}
-                  onLoad={() => {
-                    setMapImageLoading(false);
-                  }}
-                />
-              ) : (
-                <img
-                  src="/kzn-map.png"
-                  alt="KwaZulu-Natal Map"
-                  className="w-full h-auto"
-                  style={{ opacity: 0.5, display: mapImageLoading ? 'none' : 'block' }}
-                  onLoad={() => {
-                    setMapImageLoading(false);
-                    setMapImageError(false);
-                  }}
-                  onError={(e) => {
-                    setMapImageLoading(false);
-                    // Try fallback images
-                    const currentSrc = e.target.src;
-                    if (currentSrc.includes('kzn-map.png')) {
-                      e.target.src = '/map.png';
-                      setMapImageLoading(true);
-                    } else if (currentSrc.includes('map.png')) {
-                      e.target.src = '/ethekwini-map.png';
-                      setMapImageLoading(true);
-                    } else {
-                      // All fallbacks failed - use placeholder
-                      setMapImageError(true);
-                      setMapImageLoading(true);
-                    }
-                  }}
-                />
-              )}
-            </>
+          <div className="relative">
+            <img
+              src="/kzn-map.jpeg"
+              alt="KwaZulu-Natal Map"
+              className="w-full h-auto"
+              style={{ display: 'block' }}
+            />
           </div>
         </div>
       </div>
