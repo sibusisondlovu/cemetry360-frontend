@@ -55,10 +55,16 @@ export default function WorkOrders() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        cemeteryId: formData.cemeteryId || null,
+        plotId: formData.plotId || null,
+      };
+
       if (editingOrder) {
-        await api.put(`/work-orders/${editingOrder._id || editingOrder.id}`, formData);
+        await api.put(`/work-orders/${editingOrder._id || editingOrder.id}`, payload);
       } else {
-        await api.post('/work-orders', formData);
+        await api.post('/work-orders', payload);
       }
       setShowForm(false);
       setEditingOrder(null);
@@ -358,15 +364,14 @@ export default function WorkOrders() {
                           {wo.taskType}
                         </div>
                         <span
-                          className={`ml-3 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            wo.priority === 'Urgent'
+                          className={`ml-3 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${wo.priority === 'Urgent'
                               ? 'bg-red-100 text-red-800'
                               : wo.priority === 'High'
-                              ? 'bg-orange-100 text-orange-800'
-                              : wo.priority === 'Medium'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
+                                ? 'bg-orange-100 text-orange-800'
+                                : wo.priority === 'Medium'
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-gray-100 text-gray-800'
+                            }`}
                         >
                           {wo.priority}
                         </span>
@@ -379,15 +384,14 @@ export default function WorkOrders() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          wo.status === 'Completed'
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${wo.status === 'Completed'
                             ? 'bg-green-100 text-green-800'
                             : wo.status === 'In Progress'
-                            ? 'bg-blue-100 text-blue-800'
-                            : wo.status === 'On Hold'
-                            ? 'bg-gray-100 text-gray-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
+                              ? 'bg-blue-100 text-blue-800'
+                              : wo.status === 'On Hold'
+                                ? 'bg-gray-100 text-gray-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                          }`}
                       >
                         {wo.status}
                       </span>

@@ -29,6 +29,7 @@ export default function Exhumations() {
   useEffect(() => {
     fetchExhumations();
     fetchDeceased();
+    fetchPlotsForCemetery();
   }, []);
 
   useEffect(() => {
@@ -151,7 +152,7 @@ export default function Exhumations() {
     if (!window.confirm('Mark this exhumation as completed? This will update the plot status.')) return;
     try {
       await api.put(`/exhumations/${exhumationId}`, { status: 'Completed' });
-      
+
       // Fetch the exhumation to get plot ID
       const exhumation = exhumations.find(e => (e._id || e.id) === exhumationId);
       if (exhumation && exhumation.plotId) {
@@ -161,7 +162,7 @@ export default function Exhumations() {
           currentBurials: 0
         });
       }
-      
+
       alert('Exhumation marked as completed and plot status updated');
       fetchExhumations();
     } catch (error) {
@@ -485,17 +486,16 @@ export default function Exhumations() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          exhumation.status === 'Approved'
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${exhumation.status === 'Approved'
                             ? 'bg-green-100 text-green-800'
                             : exhumation.status === 'Pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : exhumation.status === 'Rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : exhumation.status === 'Completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : exhumation.status === 'Rejected'
+                                ? 'bg-red-100 text-red-800'
+                                : exhumation.status === 'Completed'
+                                  ? 'bg-blue-100 text-blue-800'
+                                  : 'bg-gray-100 text-gray-800'
+                          }`}
                       >
                         {exhumation.status}
                       </span>

@@ -55,10 +55,16 @@ export default function Enquiries() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        cemeteryId: formData.cemeteryId || null,
+        plotId: formData.plotId || null,
+      };
+
       if (editingEnquiry) {
-        await api.put(`/enquiries/${editingEnquiry._id || editingEnquiry.id}`, formData);
+        await api.put(`/enquiries/${editingEnquiry._id || editingEnquiry.id}`, payload);
       } else {
-        await api.post('/enquiries', formData);
+        await api.post('/enquiries', payload);
       }
       setShowForm(false);
       setEditingEnquiry(null);
@@ -395,15 +401,14 @@ export default function Enquiries() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          enquiry.status === 'Resolved'
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${enquiry.status === 'Resolved'
                             ? 'bg-green-100 text-green-800'
                             : enquiry.status === 'In Progress'
-                            ? 'bg-blue-100 text-blue-800'
-                            : enquiry.status === 'Closed'
-                            ? 'bg-gray-100 text-gray-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
+                              ? 'bg-blue-100 text-blue-800'
+                              : enquiry.status === 'Closed'
+                                ? 'bg-gray-100 text-gray-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                          }`}
                       >
                         {enquiry.status}
                       </span>

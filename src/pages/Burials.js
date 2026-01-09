@@ -129,7 +129,7 @@ export default function Burials() {
   const fetchBookingsForDeceased = async (deceasedId) => {
     try {
       const response = await api.get(`/bookings?deceasedId=${deceasedId}`);
-      const activeBookings = response.data.filter(b => 
+      const activeBookings = response.data.filter(b =>
         b.status === 'Pending' || b.status === 'Confirmed'
       );
       setBookings(activeBookings);
@@ -161,11 +161,20 @@ export default function Burials() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        deceasedId: formData.deceasedId || null,
+        bookingId: formData.bookingId || null,
+        cemeteryId: formData.cemeteryId || null,
+        plotId: formData.plotId || null,
+        crematoriumId: formData.crematoriumId || null,
+      };
+
       if (editingBurial) {
-        await api.put(`/burials/${editingBurial._id || editingBurial.id}`, formData);
+        await api.put(`/burials/${editingBurial._id || editingBurial.id}`, payload);
         alert('Burial event updated successfully');
       } else {
-        await api.post('/burials', formData);
+        await api.post('/burials', payload);
         alert('Burial event created successfully');
       }
       setShowForm(false);

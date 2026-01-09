@@ -122,11 +122,19 @@ export default function Bookings() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        deceasedId: formData.deceasedId || null,
+        cemeteryId: formData.cemeteryId || null,
+        plotId: formData.plotId || null,
+        crematoriumId: formData.crematoriumId || null,
+      };
+
       if (editingBooking) {
-        await api.put(`/bookings/${editingBooking._id || editingBooking.id}`, formData);
+        await api.put(`/bookings/${editingBooking._id || editingBooking.id}`, payload);
         alert('Booking updated successfully');
       } else {
-        await api.post('/bookings', formData);
+        await api.post('/bookings', payload);
         alert('Booking created successfully');
       }
       setShowForm(false);
@@ -487,17 +495,16 @@ export default function Bookings() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          booking.status === 'Confirmed'
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.status === 'Confirmed'
                             ? 'bg-green-100 text-green-800'
                             : booking.status === 'Pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : booking.status === 'Completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : booking.status === 'Cancelled'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : booking.status === 'Completed'
+                                ? 'bg-blue-100 text-blue-800'
+                                : booking.status === 'Cancelled'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-gray-100 text-gray-800'
+                          }`}
                       >
                         {booking.status}
                       </span>

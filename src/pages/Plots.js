@@ -61,14 +61,18 @@ export default function Plots() {
       setShowReuseModal(true);
     } catch (error) {
       console.error('Error evaluating plot re-use:', error);
-      alert(error.response?.data?.error || 'Failed to evaluate plot for re-use');
+      if (error.response?.status === 404) {
+        alert('No burial found for this plot to evaluate re-use duration from.');
+      } else {
+        alert(error.response?.data?.error || 'Failed to evaluate plot for re-use');
+      }
     }
   };
 
   const handleApproveReuse = async () => {
     if (!selectedPlot) return;
     const inspectionNotes = window.prompt('Enter inspection notes (optional):');
-    
+
     try {
       await api.post('/plots/reuse/approve', {
         plotId: selectedPlot._id || selectedPlot.id,
@@ -107,11 +111,11 @@ export default function Plots() {
   // Group plots by cemetery
   const plotsByCemetery = useMemo(() => {
     const grouped = {};
-    
+
     filteredPlots.forEach((plot) => {
       const cemeteryId = plot.cemetery?._id || plot.cemetery?.id || 'unknown';
       const cemeteryName = plot.cemetery?.name || 'Unknown Cemetery';
-      
+
       if (!grouped[cemeteryId]) {
         grouped[cemeteryId] = {
           cemetery: plot.cemetery || { name: cemeteryName, _id: cemeteryId },
@@ -123,7 +127,7 @@ export default function Plots() {
 
     // Sort plots within each cemetery
     Object.keys(grouped).forEach((key) => {
-      grouped[key].plots.sort((a, b) => 
+      grouped[key].plots.sort((a, b) =>
         (a.uniqueIdentifier || '').localeCompare(b.uniqueIdentifier || '')
       );
     });
@@ -195,7 +199,7 @@ export default function Plots() {
           </p>
         )}
 
-      {/* Filters */}
+        {/* Filters */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -330,19 +334,18 @@ export default function Plots() {
                           </div>
                           <div className="flex items-center gap-2">
                             <span
-                              className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                plot.status === 'Available'
+                              className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${plot.status === 'Available'
                                   ? 'bg-green-100 text-green-800'
                                   : plot.status === 'Occupied'
-                                  ? 'bg-red-100 text-red-800'
-                                  : plot.status === 'Reserved'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : plot.status === 'Re-usable'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : plot.status === 'Closed'
-                                  ? 'bg-gray-100 text-gray-800'
-                                  : 'bg-blue-100 text-blue-800'
-                              }`}
+                                    ? 'bg-red-100 text-red-800'
+                                    : plot.status === 'Reserved'
+                                      ? 'bg-yellow-100 text-yellow-800'
+                                      : plot.status === 'Re-usable'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : plot.status === 'Closed'
+                                          ? 'bg-gray-100 text-gray-800'
+                                          : 'bg-blue-100 text-blue-800'
+                                }`}
                             >
                               {plot.status}
                             </span>
