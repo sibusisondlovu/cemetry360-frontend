@@ -96,9 +96,15 @@ export default function Bookings() {
   const fetchPlots = async (cemeteryId) => {
     try {
       const response = await api.get(`/plots?cemeteryId=${cemeteryId}`);
-      setPlots(response.data);
+      if (Array.isArray(response.data)) {
+        setPlots(response.data);
+      } else {
+        console.error('Invalid plots data received:', response.data);
+        setPlots([]);
+      }
     } catch (error) {
       console.error('Error fetching plots:', error);
+      setPlots([]);
     }
   };
 
@@ -128,6 +134,7 @@ export default function Bookings() {
         cemeteryId: formData.cemeteryId || null,
         plotId: formData.plotId || null,
         crematoriumId: formData.crematoriumId || null,
+        undertakerId: null, // Ensure this isn't undefined if not in form
       };
 
       if (editingBooking) {
@@ -496,14 +503,14 @@ export default function Bookings() {
                     <div className="flex items-center gap-2">
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.status === 'Confirmed'
-                            ? 'bg-green-100 text-green-800'
-                            : booking.status === 'Pending'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : booking.status === 'Completed'
-                                ? 'bg-blue-100 text-blue-800'
-                                : booking.status === 'Cancelled'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-gray-100 text-gray-800'
+                          ? 'bg-green-100 text-green-800'
+                          : booking.status === 'Pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : booking.status === 'Completed'
+                              ? 'bg-blue-100 text-blue-800'
+                              : booking.status === 'Cancelled'
+                                ? 'bg-red-100 text-red-800'
+                                : 'bg-gray-100 text-gray-800'
                           }`}
                       >
                         {booking.status}
