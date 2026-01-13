@@ -62,10 +62,15 @@ export default function UndertakerBookings() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Sanitize payload: Remove empty strings for optional ObjectId fields
+      const payload = { ...formData };
+      if (!payload.plotId) delete payload.plotId;
+      if (!payload.crematoriumId) delete payload.crematoriumId;
+
       if (editingBooking) {
-        await api.put(`/undertaker/bookings/${editingBooking._id || editingBooking.id}`, formData);
+        await api.put(`/undertaker/bookings/${editingBooking._id || editingBooking.id}`, payload);
       } else {
-        await api.post('/undertaker/bookings', formData);
+        await api.post('/undertaker/bookings', payload);
       }
       setShowForm(false);
       setEditingBooking(null);
@@ -307,15 +312,14 @@ export default function UndertakerBookings() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          booking.status === 'Confirmed'
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.status === 'Confirmed'
                             ? 'bg-green-100 text-green-800'
                             : booking.status === 'Pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : booking.status === 'Completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : booking.status === 'Completed'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-gray-100 text-gray-800'
+                          }`}
                       >
                         {booking.status}
                       </span>

@@ -28,20 +28,7 @@ export default function Dashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [cemeteries, setCemeteries] = useState([]);
-  const [mapImageError, setMapImageError] = useState(false);
-  const [mapImageLoading, setMapImageLoading] = useState(true);
 
-  // Timeout to prevent infinite loading
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (mapImageLoading) {
-        setMapImageLoading(false);
-        setMapImageError(true);
-      }
-    }, 3000); // 3 second timeout
-
-    return () => clearTimeout(timeout);
-  }, [mapImageLoading]);
 
   useEffect(() => {
     const fetchStats = async () => {
